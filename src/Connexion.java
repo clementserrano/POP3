@@ -20,9 +20,42 @@ public class Connexion implements Runnable {
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
+            String etat = "AUTHORIZATION";
+
             while (socket.isConnected()){
                 if ((message = in.readLine()) != null ) {
                     print(message);
+                }
+
+                String[] array =  message.split(" ");
+                String evt = array[0];
+                String param = array[1];
+
+                switch(message){
+                    case "APOP" :
+                        switch(etat){
+                            case "AUTHORIZATION" : break;
+                            case "TRANSACTION" : break;
+                        }
+                        break;
+                    case "STAT" :
+                        switch(etat){
+                            case "AUTHORIZATION" : break;
+                            case "TRANSACTION" : break;
+                        }
+                        break;
+                    case "RETR" :
+                        switch(etat){
+                            case "AUTHORIZATION" : break;
+                            case "TRANSACTION" : break;
+                        }
+                    break;
+                    case "QUIT" :
+                        switch(etat){
+                            case "AUTHORIZATION" : break;
+                            case "TRANSACTION" : break;
+                        }
+                        break;
                 }
             }
             System.out.println("Connexion closed");

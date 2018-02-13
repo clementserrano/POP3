@@ -31,7 +31,7 @@ public class Connexion implements Runnable {
                 String evt = array[0];
                 String param = array[1];
 
-                switch(message){
+                switch(evt){
                     case "APOP" :
                         switch(etat){
                             case "AUTHORIZATION" : break;

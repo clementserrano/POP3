@@ -9,7 +9,7 @@ public class Connexion implements Runnable {
     private Socket socket;
     private String message;
 
-    public Connexion(Socket socket){
+    private Connexion(Socket socket){
         this.socket = socket;
     }
 
@@ -25,37 +25,47 @@ public class Connexion implements Runnable {
             while (socket.isConnected()){
                 if ((message = in.readLine()) != null ) {
                     print(message);
-                }
 
-                String[] array =  message.split(" ");
-                String evt = array[0];
-                String param = array[1];
+                    String[] array = message.split(" ");
+                    String evt = array[0];
+                    String param = array[1];
 
-                switch(evt){
-                    case "APOP" :
-                        switch(etat){
-                            case "AUTHORIZATION" : break;
-                            case "TRANSACTION" : break;
-                        }
-                        break;
-                    case "STAT" :
-                        switch(etat){
-                            case "AUTHORIZATION" : break;
-                            case "TRANSACTION" : break;
-                        }
-                        break;
-                    case "RETR" :
-                        switch(etat){
-                            case "AUTHORIZATION" : break;
-                            case "TRANSACTION" : break;
-                        }
-                    break;
-                    case "QUIT" :
-                        switch(etat){
-                            case "AUTHORIZATION" : break;
-                            case "TRANSACTION" : break;
-                        }
-                        break;
+                    switch (EventPOP3.valueOf(evt)) {
+                        case APOP:
+                            switch (States.valueOf(etat)) {
+                                case AUTHORIZATION:
+                                    break;
+                                case TRANSACTION:
+                                    break;
+                            }
+                            break;
+                        case STAT:
+                            switch (States.valueOf(etat)) {
+                                case AUTHORIZATION:
+                                    break;
+                                case TRANSACTION:
+                                    break;
+                            }
+                            break;
+                        case RETR:
+                            switch (States.valueOf(etat)) {
+                                case AUTHORIZATION:
+                                    break;
+                                case TRANSACTION:
+                                    break;
+                            }
+                            break;
+                        case QUIT:
+                            switch (States.valueOf(etat)) {
+                                case AUTHORIZATION:
+                                    break;
+                                case TRANSACTION:
+                                    break;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
             System.out.println("Connexion closed");

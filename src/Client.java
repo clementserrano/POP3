@@ -23,7 +23,8 @@ public class Client extends ConsoleApp {
                 }
                 else {
                     log("Sending command " + input);
-                    socket.getOutputStream().write((input + "\r\n").getBytes());
+                    socket.getOutputStream().write(input.getBytes());
+                    socket.getOutputStream().write("\r\n".getBytes());
                     //send(input);
                     /*
                     if (input.contains("QUIT")){

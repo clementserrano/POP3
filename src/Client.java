@@ -16,7 +16,7 @@ public class Client extends ConsoleApp {
 
             Scanner scanner = new Scanner(System.in);
 
-            //while (socket.isConnected()){
+            while (socket.isConnected()){
                 String input = scanner.next();
                 if (input == null || input.isEmpty()){
                     //break;
@@ -24,6 +24,7 @@ public class Client extends ConsoleApp {
                 else {
                     log("Sending command " + input);
                     socket.getOutputStream().write(input.getBytes());
+                    socket.getOutputStream().write("\r\n".getBytes());
                     //send(input);
                     /*
                     if (input.contains("QUIT")){
@@ -31,7 +32,7 @@ public class Client extends ConsoleApp {
                     }
                     */
                 }
-            //}
+            }
             socket.close();
             log("Disconnected", ConsoleColor.ANSI_RED);
 

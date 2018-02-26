@@ -9,30 +9,31 @@ public class Connexion implements Runnable {
     private Socket socket;
     private String message;
 
-    private Connexion(Socket socket){
+    public Connexion(Socket socket){
         this.socket = socket;
     }
 
     @Override
     public void run() {
         try {
-
+            System.out.println("Connexion Thread launched");
+            System.out.println(socket);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-            String etat = "AUTHORIZATION";
+            States etat = States.AUTHORIZATION;
 
             while (socket.isConnected()){
                 if ((message = in.readLine()) != null ) {
                     print(message);
-
+                    /*
                     String[] array = message.split(" ");
                     String evt = array[0];
                     String param = array[1];
 
                     switch (EventPOP3.valueOf(evt)) {
                         case APOP:
-                            switch (States.valueOf(etat)) {
+                            switch (etat) {
                                 case AUTHORIZATION:
                                     break;
                                 case TRANSACTION:
@@ -40,7 +41,7 @@ public class Connexion implements Runnable {
                             }
                             break;
                         case STAT:
-                            switch (States.valueOf(etat)) {
+                            switch (etat) {
                                 case AUTHORIZATION:
                                     break;
                                 case TRANSACTION:
@@ -48,7 +49,7 @@ public class Connexion implements Runnable {
                             }
                             break;
                         case RETR:
-                            switch (States.valueOf(etat)) {
+                            switch (etat) {
                                 case AUTHORIZATION:
                                     break;
                                 case TRANSACTION:
@@ -56,16 +57,20 @@ public class Connexion implements Runnable {
                             }
                             break;
                         case QUIT:
-                            switch (States.valueOf(etat)) {
+                            switch (etat) {
                                 case AUTHORIZATION:
+                                    socket.close();
                                     break;
                                 case TRANSACTION:
+                                    socket.close();
                                     break;
                             }
                             break;
+
                         default:
                             break;
                     }
+                    */
                 }
             }
             System.out.println("Connexion closed");

@@ -10,19 +10,15 @@ public class Server extends ConsoleApp {
 
         try {
             setConsoleColor(ConsoleColor.ANSI_RED);
-            System.out.println("Starting Server");
+            log("Starting Server", ConsoleColor.ANSI_RED);
             serverSocket = new ServerSocket(port, 10);
-            System.out.println("InetAddress : " + serverSocket.getInetAddress());
-            System.out.println("Port :" + serverSocket.getLocalPort());
-            resetConsoleColor();
+            log("InetAddress : " + serverSocket.getInetAddress(), ConsoleColor.ANSI_RED);
+            log("Port :" + serverSocket.getLocalPort(), ConsoleColor.ANSI_RED);
+            log("Waiting for client ... ");
 
             while (true){
-                resetConsoleColor();
-                System.out.println("Waiting for client ... ");
                 Socket inputClientSocket = serverSocket.accept();
-                setConsoleColor(ConsoleColor.ANSI_GREEN);
-                System.out.println("Client "+ inputClientSocket.getInetAddress() + " connected.");
-                resetConsoleColor();
+                log("Client "+ inputClientSocket.getInetAddress() + " connected.", ConsoleColor.ANSI_GREEN);
 
                 new Thread(new Connexion(inputClientSocket)).start();
             }

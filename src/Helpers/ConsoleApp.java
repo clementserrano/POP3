@@ -1,3 +1,5 @@
+package Helpers;
+
 public abstract class ConsoleApp {
 
     public ConsoleApp(){

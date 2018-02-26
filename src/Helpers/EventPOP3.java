@@ -1,3 +1,5 @@
+package Helpers;
+
 public enum EventPOP3 {
 
     APOP("APOP"),

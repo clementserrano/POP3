@@ -1,4 +1,7 @@
-import java.io.OutputStream;
+import Helpers.ConsoleApp;
+import Helpers.ConsoleColor;
+import Helpers.EventPOP3;
+
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -28,7 +31,7 @@ public class Client extends ConsoleApp {
                     //send(input);
                     /*
                     if (input.contains("QUIT")){
-                        sendMessage(EventPOP3.QUIT);
+                        sendMessage(Helpers.EventPOP3.QUIT);
                     }
                     */
                 }
@@ -37,7 +40,7 @@ public class Client extends ConsoleApp {
             log("Disconnected", ConsoleColor.ANSI_RED);
 
         }catch (ConnectException connectException){
-            log("Unable to connect : Connexion refused. The server may not be running.", ConsoleColor.ANSI_RED);
+            log("Unable to connect : Server.Server.Connexion refused. The server may not be running.", ConsoleColor.ANSI_RED);
         }catch (Exception e){
             e.printStackTrace();
         }

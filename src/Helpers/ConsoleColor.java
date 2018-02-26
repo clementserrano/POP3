@@ -1,3 +1,5 @@
+package Helpers;
+
 public enum ConsoleColor {
 
     ANSI_RESET ("\u001B[0m"),

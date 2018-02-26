@@ -1,3 +1,9 @@
+package Server;
+
+import Helpers.ConsoleColor;
+import Helpers.EventPOP3;
+import Helpers.States;
+
 import java.io.*;
 import java.net.Socket;
 import java.security.MessageDigest;
@@ -22,7 +28,7 @@ public class Connexion implements Runnable {
         initData();
 
         try {
-            System.out.println("Connexion Thread launched");
+            System.out.println("Server.Server.Connexion Thread launched");
             System.out.println(socket);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -109,7 +115,7 @@ public class Connexion implements Runnable {
 
                 }
             }
-            System.out.println("Connexion closed");
+            System.out.println("Server.Server.Connexion closed");
             socket.close();
 
         }catch (Exception e){

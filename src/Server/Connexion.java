@@ -14,7 +14,11 @@ import java.util.Map;
 public class Connexion implements Runnable {
 
     private Socket socket;
+
+    //Tableau des utilisateurs et passwords
     private static Map<String, String> users;
+
+    //Tableau des utilisateurs et de leurs mails associés
     private static Map<String, Map<Integer, String>> boitesMail;
 
 

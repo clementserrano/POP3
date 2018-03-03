@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.GUI.Controllers.ConnexionController">
+   <children>
+      <Pane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #ffe3b5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
+         <children>
+            <Button fx:id="connexion" layoutX="264.0" layoutY="297.0" mnemonicParsing="false" text="Connexion" />
+            <Label layoutX="172.0" layoutY="192.0" text="Nom d'utilisateur" />
+            <Label layoutX="182.0" layoutY="237.0" text="Mot de passe" />
+            <TextField fx:id="userNameTextField" layoutX="300.0" layoutY="188.0" />
+            <TextField fx:id="passwordTextField" layoutX="300.0" layoutY="233.0" />
+            <TextField fx:id="hostAdressTextField" layoutX="300.0" layoutY="69.0" />
+            <TextField fx:id="portTextField" layoutX="300.0" layoutY="119.0" />
+            <Label layoutX="172.0" layoutY="73.0" text="Adresse de l'hote" />
+            <Label layoutX="207.0" layoutY="123.0" text="Port" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

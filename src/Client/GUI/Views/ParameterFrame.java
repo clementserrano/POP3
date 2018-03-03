@@ -1,14 +1,14 @@
-package Client.GUI;
+package Client.GUI.Views;
 
 import Helpers.Constants;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MailFrame extends JFrame {
+public class ParameterFrame extends JFrame {
 
-    public MailFrame(){
-        this.setTitle(Constants.mainFrameName);
+    public ParameterFrame(){
+        this.setTitle(Constants.parameterFrameName);
         this.setSize(Constants.frameDimension);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -18,5 +18,4 @@ public class MailFrame extends JFrame {
 
         this.setVisible(true);
     }
-
 }

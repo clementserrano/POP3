@@ -10,6 +10,6 @@ public class Constants {
     public final static String parameterFrameName = "Paramètres";
 
     // DIMENSION
-    public final static Dimension frameDimension = new Dimension(500, 300);
+    public final static Dimension frameDimension = new Dimension(600, 400);
 
 }

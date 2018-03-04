@@ -18,7 +18,7 @@
             <Label layoutX="35.0" layoutY="117.0" text="mdp" />
             <TextField fx:id="userName" layoutX="89.0" layoutY="88.0" />
             <TextField fx:id="password" layoutX="89.0" layoutY="113.0" />
-            <Button fx:id="login" layoutX="275.0" layoutY="101.0" mnemonicParsing="false" text="Log In" />
+            <Button fx:id="login" layoutX="275.0" layoutY="101.0" mnemonicParsing="false" onMouseClicked="#login" text="Log In" />
             <ListView fx:id="mailList" layoutX="21.0" layoutY="186.0" prefHeight="200.0" prefWidth="149.0" />
             <TextArea fx:id="mailContent" layoutX="187.0" layoutY="186.0" prefHeight="200.0" prefWidth="149.0" />
          </children></Pane>

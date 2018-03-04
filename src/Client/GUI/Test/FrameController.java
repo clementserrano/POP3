@@ -31,7 +31,11 @@ public class FrameController {
     @FXML
     public void connect(){
         log("Trying to connect to " + hostAdress.getText() + " on port " + port.getText());
+    }
 
+    @FXML
+    public void login(){
+        log("Loging in your Mail Box");
     }
 
     private void log(String string){

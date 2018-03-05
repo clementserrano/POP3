@@ -1,0 +1,22 @@
+{
+  "users": {
+    "Jean": "Karim",
+    "Philippe": "Fric",
+    "Monfrere": "Gstaad"
+  },
+
+  "boitesMail": {
+    "Jean": {
+      "0": "Jérome ta mère.",
+      "1": "Philippe ton père."
+    },
+    "Philippe": {
+      "0": "Je sais où tu te caches.",
+      "1": "Tous les deux on peut se faire du fric."
+    },
+    "Monfrere": {
+      "0": "Tu as tué mon frère à Gstaad",
+      "1": "Tu vas mourir"
+    }
+  }
+}

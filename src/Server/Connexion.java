@@ -61,7 +61,8 @@ public class Connexion implements Runnable {
                                     if (users.keySet().contains(param)) {
                                         // Vérifie si pass OK
                                         String pass = array[2];
-                                        if (param.equals(MessageDigest.getInstance("MD5").digest(pass.getBytes()))) {
+                                        if (MessageDigest.getInstance("MD5").digest(users.get(param).getBytes())
+                                                .equals(pass)) {
                                             user = param;
                                             boiteMail = boitesMail.get(user);
                                             out.write("+OK " + user + " a " + boiteMail.size() + " messages.");

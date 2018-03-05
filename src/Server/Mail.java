@@ -1,12 +1,10 @@
 package Server;
 
-import java.util.Date;
-
 public class Mail {
     private String from;
     private String to;
     private String subject;
-    private Date date;
+    private String date;
     private String message_id;
     private String content;
 
@@ -34,11 +32,11 @@ public class Mail {
         this.subject = subject;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -56,5 +54,28 @@ public class Mail {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public int getNbBytes(){
+        int res = 0;
+        res += from.getBytes().length
+                + to.getBytes().length
+                + subject.getBytes().length
+                + date.toString().getBytes().length
+                + message_id.getBytes().length
+                + content.getBytes().length;
+        return res;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("From: ").append(from).append("\n")
+                .append("To: ").append(to).append("\n")
+                .append("Subject: ").append(subject).append("\n")
+                .append("Date: ").append(date.toString()).append("\n")
+                .append("Message-ID").append(message_id).append("\n\n")
+                .append(content);
+        return sb.toString();
     }
 }

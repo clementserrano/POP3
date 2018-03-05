@@ -23,10 +23,10 @@ public class Connexion implements Runnable {
     private static Map<String, String> users;
 
     //Tableau des utilisateurs et de leurs mails associés
-    private static Map<String, Map<Integer, String>> boitesMail;
+    private static Map<String, Map<Integer, Mail>> boitesMail;
 
 
-    public Connexion(Socket socket, Map<String, String> users, Map<String, Map<Integer, String>> boitesMail) {
+    public Connexion(Socket socket, Map<String, String> users, Map<String, Map<Integer, Mail>> boitesMail) {
         this.socket = socket;
         this.users = users;
         this.boitesMail = boitesMail;
@@ -43,7 +43,7 @@ public class Connexion implements Runnable {
             States etat = States.AUTHORIZATION;
             String message;
             String user = "";
-            Map<Integer, String> boiteMail = new HashMap<>();
+            Map<Integer, Mail> boiteMail = new HashMap<>();
 
             while (socket.isConnected()) {
                 if ((message = in.readLine()) != null) {
@@ -95,8 +95,8 @@ public class Connexion implements Runnable {
                                     Integer nMail = Integer.valueOf(param);
                                     if (boiteMail.keySet().contains(nMail)) {
                                         // Construit la réponse
-                                        String mail = boiteMail.get(nMail);
-                                        String mes = "+OK " + mail.getBytes().length + " octets\n";
+                                        Mail mail = boiteMail.get(nMail);
+                                        String mes = "+OK " + mail.getNbBytes() + " octets\n";
                                         mes += mail;
                                         out.write(mes);
                                     } else {
@@ -131,10 +131,10 @@ public class Connexion implements Runnable {
         }
     }
 
-    private int nbOctet(Map<Integer, String> mails) {
+    private int nbOctet(Map<Integer, Mail> mails) {
         int res = 0;
-        for (Map.Entry<Integer, String> m : mails.entrySet()) {
-            res += m.getValue().getBytes().length;
+        for (Map.Entry<Integer, Mail> m : mails.entrySet()) {
+            res += m.getValue().getNbBytes();
         }
         return res;
     }

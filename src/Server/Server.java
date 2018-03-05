@@ -2,9 +2,17 @@ package Server;
 
 import Helpers.ConsoleApp;
 import Helpers.ConsoleColor;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.lang.reflect.Type;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Server extends ConsoleApp {
 
@@ -12,6 +20,10 @@ public class Server extends ConsoleApp {
     private static ServerSocket serverSocket;
 
     public static void main(String[] args) {
+
+        Map<String, String> users = new HashMap<>();
+        Map<String, Map<Integer, String>> boitesMail = new HashMap<>();
+        initData(users, boitesMail);
 
         try {
             ConsoleApp.setConsoleColor(ConsoleColor.ANSI_RED);
@@ -25,9 +37,26 @@ public class Server extends ConsoleApp {
                 Socket inputClientSocket = serverSocket.accept();
                 ConsoleApp.log("Client "+ inputClientSocket.getInetAddress() + " connected.", ConsoleColor.ANSI_GREEN);
 
-                new Thread(new Connexion(inputClientSocket)).start();
+                new Thread(new Connexion(inputClientSocket, users, boitesMail)).start();
             }
         }catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void initData(Map<String, String> users, Map<String, Map<Integer, String>> boitesMail) {
+        Gson gson = new Gson();
+        try {
+            FileReader file = new FileReader("src/Server/database.json");
+            JsonObject json = gson.fromJson(file, JsonObject.class);
+            // Users
+            Type usersType = new TypeToken<Map<String, String>>() {}.getType();
+            users = gson.fromJson(json.get("users").getAsJsonObject(), usersType);
+
+            // Boites mail
+            Type boitesMailType = new TypeToken<Map<String, Map<Integer, String>>>() {}.getType();
+            boitesMail = gson.fromJson(json.get("boitesMail").getAsJsonObject(), boitesMailType);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }

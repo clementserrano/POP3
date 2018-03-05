@@ -26,15 +26,14 @@ public class Connexion implements Runnable {
     private static Map<String, Map<Integer, String>> boitesMail;
 
 
-    public Connexion(Socket socket) {
+    public Connexion(Socket socket, Map<String, String> users, Map<String, Map<Integer, String>> boitesMail) {
         this.socket = socket;
+        this.users = users;
+        this.boitesMail = boitesMail;
     }
 
     @Override
     public void run() {
-        // Initialise users et boites mails
-        initData();
-
         try {
             System.out.println("Server.Server.Connexion Thread launched");
             System.out.println(socket);
@@ -62,8 +61,7 @@ public class Connexion implements Runnable {
                                     if (users.keySet().contains(param)) {
                                         // Vérifie si pass OK
                                         String pass = array[2];
-                                        if (MessageDigest.getInstance("MD5").digest(users.get(param).getBytes())
-                                                .equals(MessageDigest.getInstance("MD5").digest(pass.getBytes()))) {
+                                        if (param.equals(MessageDigest.getInstance("MD5").digest(pass.getBytes()))) {
                                             user = param;
                                             boiteMail = boitesMail.get(user);
                                             out.write("+OK " + user + " a " + boiteMail.size() + " messages.");
@@ -138,23 +136,6 @@ public class Connexion implements Runnable {
             res += m.getValue().getBytes().length;
         }
         return res;
-    }
-
-    private void initData() {
-        Gson gson = new Gson();
-        try {
-            FileReader file = new FileReader("src/Server/database.json");
-            JsonObject json = gson.fromJson(file, JsonObject.class);
-            // Users
-            Type usersType = new TypeToken<Map<String, String>>() {}.getType();
-            users = gson.fromJson(json.get("users").getAsJsonObject(), usersType);
-
-            // Boites mail
-            Type boitesMailType = new TypeToken<Map<String, Map<Integer, String>>>() {}.getType();
-            boitesMail = gson.fromJson(json.get("boitesMail").getAsJsonObject(), boitesMailType);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
     }
 
     private void print(String message) {

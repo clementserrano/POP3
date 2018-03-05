@@ -3,12 +3,11 @@ package Server;
 import Helpers.ConsoleColor;
 import Helpers.EventPOP3;
 import Helpers.States;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 
-import java.io.*;
-import java.lang.reflect.Type;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.util.HashMap;
@@ -65,30 +64,30 @@ public class Connexion implements Runnable {
                                                 .equals(pass)) {
                                             user = param;
                                             boiteMail = boitesMail.get(user);
-                                            out.write("+OK " + user + " a " + boiteMail.size() + " messages.");
+                                            out.write("+OK " + user + " a " + boiteMail.size() + " messages.\r\n");
                                         }
                                     }
                                     break;
                                 case TRANSACTION:
-                                    out.write("Commande " + message + " ignorée");
+                                    out.write("Commande " + message + " ignorée\r\n");
                                     break;
                             }
                             break;
                         case STAT:
                             switch (etat) {
                                 case AUTHORIZATION:
-                                    out.write("Commande " + message + " ignorée");
+                                    out.write("Commande " + message + " ignorée\r\n");
                                     break;
                                 case TRANSACTION:
                                     out.write("+OK nbMails : " + boiteMail.size() + " taille : " + nbOctet(boiteMail)
-                                            + " octets");
+                                            + " octets\r\n");
                                     break;
                             }
                             break;
                         case RETR:
                             switch (etat) {
                                 case AUTHORIZATION:
-                                    out.write("Commande " + message + " ignorée");
+                                    out.write("Commande " + message + " ignorée\r\n");
                                     break;
                                 case TRANSACTION:
                                     // Vérifie si le numéro correspond
@@ -98,9 +97,9 @@ public class Connexion implements Runnable {
                                         Mail mail = boiteMail.get(nMail);
                                         String mes = "+OK " + mail.getNbBytes() + " octets\n";
                                         mes += mail;
-                                        out.write(mes);
+                                        out.write(mes+"\r\n");
                                     } else {
-                                        out.write("-ERR");
+                                        out.write("-ERR\r\n");
                                     }
                                     break;
                             }

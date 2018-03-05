@@ -4,19 +4,84 @@
     "Philippe": "Fric",
     "Monfrere": "Gstaad"
   },
-
   "boitesMail": {
     "Jean": {
-      "0": "Jérome ta mère.",
-      "1": "Philippe ton père."
+      "0": {
+        "from": "Julien <julien@machouille.net",
+        "to": "Jean <jean@gmail.com>",
+        "subject": "Important",
+        "date": "Fri, 21 Nov 1997 09:55:06 -0600",
+        "message_id": "<0@server.com>",
+        "content": "Jérome ta mère."
+      },
+      "1": {
+        "from": "Julien <julien@machouille.net",
+        "to": "Jean <jean@gmail.com>",
+        "subject": "Plus important",
+        "date": "Fri, 22 Nov 1997 09:55:06 -0600",
+        "message_id": "<1@server.com>",
+        "content": "Philippe ton père."
+      },
+      "2": {
+        "from": "Julien <julien@machouille.net",
+        "to": "Jean <jean@gmail.com>",
+        "subject": "Encore plus important",
+        "date": "Fri, 28 Nov 1997 09:55:06 -0600",
+        "message_id": "<2@server.com>",
+        "content": "Celine ta soeur."
+      }
     },
     "Philippe": {
-      "0": "Je sais où tu te caches.",
-      "1": "Tous les deux on peut se faire du fric."
+      "0": {
+        "from": "Julien <julien@machouille.net",
+        "to": "Philippe <philippe@gmail.com>",
+        "subject": "Cachette",
+        "date": "Fri, 23 Nov 1997 09:55:06 -0600",
+        "message_id": "<0@server.com>",
+        "content": "Je sais où tu te caches."
+      },
+      "1": {
+        "from": "Julien <julien@machouille.net",
+        "to": "Philippe <philippe@gmail.com>",
+        "subject": "Pognon",
+        "date": "Fri, 24 Nov 1997 09:55:06 -0600",
+        "message_id": "<1@server.com>",
+        "content": "Tous les deux on peut se faire du fric."
+      },
+      "2": {
+        "from": "Julien <julien@machouille.net",
+        "to": "Philippe <philippe@gmail.com>",
+        "subject": "Noël",
+        "date": "Fri, 25 Dec 2017 09:50:06 -0600",
+        "message_id": "<2@server.com>",
+        "content": "Les boules de Noël."
+      }
     },
     "Monfrere": {
-      "0": "Tu as tué mon frère à Gstaad",
-      "1": "Tu vas mourir"
+      "0": {
+        "from": "Julien <julien@machouille.net",
+        "to": "Monfrere <monfrere@gmail.com",
+        "subject": "Meurtre",
+        "date": "Fri, 25 Nov 1997 09:55:06 -0600",
+        "message_id": "<0@server.com>",
+        "content": "Tu as tué mon frère à Gstaad"
+      },
+      "1": {
+        "from": "Julien <julien@machouille.net",
+        "to": "Monfrere <monfrere@gmail.com>",
+        "subject": "Mort",
+        "date": "Fri, 26 Nov 1997 09:55:06 -0600",
+        "message_id": "<1@server.com>",
+        "content": "Tu vas mourir"
+      },
+      "2": {
+        "from": "Julien <julien@machouille.net",
+        "to": "Monfrere <monfrere@gmail.com>",
+        "subject": "Bye",
+        "date": "Fri, 29 Nov 1997 09:55:06 -0600",
+        "message_id": "<2@server.com>",
+        "content": "Hasta la vista bye-bye."
+      }
     }
   }
 }

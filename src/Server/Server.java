@@ -19,11 +19,18 @@ public class Server extends ConsoleApp {
     private static final int port = 25;
     private static ServerSocket serverSocket;
 
+    //Tableau des utilisateurs et passwords
+    private static Map<String, String> users;
+
+    //Tableau des utilisateurs et de leurs mails associés
+    private static Map<String, Map<Integer, Mail>> boitesMail;
+
     public static void main(String[] args) {
 
-        Map<String, String> users = new HashMap<>();
-        Map<String, Map<Integer, String>> boitesMail = new HashMap<>();
-        initData(users, boitesMail);
+        Gson gson = new Gson();
+        users = new HashMap<>();
+        boitesMail = new HashMap<>();
+        initData(gson);
 
         try {
             ConsoleApp.setConsoleColor(ConsoleColor.ANSI_RED);
@@ -44,8 +51,7 @@ public class Server extends ConsoleApp {
         }
     }
 
-    private static void initData(Map<String, String> users, Map<String, Map<Integer, String>> boitesMail) {
-        Gson gson = new Gson();
+    private static void initData(Gson gson) {
         try {
             FileReader file = new FileReader("src/Server/database.json");
             JsonObject json = gson.fromJson(file, JsonObject.class);
@@ -54,7 +60,7 @@ public class Server extends ConsoleApp {
             users = gson.fromJson(json.get("users").getAsJsonObject(), usersType);
 
             // Boites mail
-            Type boitesMailType = new TypeToken<Map<String, Map<Integer, String>>>() {}.getType();
+            Type boitesMailType = new TypeToken<Map<String, Map<Integer, Mail>>>() {}.getType();
             boitesMail = gson.fromJson(json.get("boitesMail").getAsJsonObject(), boitesMailType);
         } catch (FileNotFoundException e) {
             e.printStackTrace();

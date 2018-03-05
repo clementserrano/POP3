@@ -37,13 +37,23 @@ public class ReceptionThread implements Runnable {
 
                     if (splitedString[0].contains(Constants.ok)) {
                         frameController.log(recievedString);
+                        if (splitedString.length == 5){
+                            frameController.messageNumber = Integer.parseInt(splitedString[3]);
+                        }
                     } else if (splitedString[0].contains(Constants.err)) {
                         frameController.log(recievedString);
+                    }
+                    else {
+                        if(!recievedString.equals(".")){
+                            frameController.log(recievedString);
+                        }
+                        else {
+                            frameController.log(recievedString);
+                        }
                     }
                 }
             }
         } catch(Exception e){
-            e.printStackTrace();
             frameController.log("disconnected");
             frameController.setState(States.AUTHORIZATION);
         }

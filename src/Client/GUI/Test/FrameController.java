@@ -23,6 +23,7 @@ public class FrameController {
     private Socket socket;
     private InputStream inputStream;
     private OutputStream outputStream;
+    public int messageNumber;
 
     private States state = States.AUTHORIZATION;
 
@@ -37,7 +38,11 @@ public class FrameController {
     @FXML
     private Button connect;
     @FXML
+    private Button disconnect;
+    @FXML
     private Button login;
+    @FXML
+    private Button refresh;
     @FXML
     private ListView mailList;
     @FXML
@@ -69,14 +74,45 @@ public class FrameController {
     }
 
     @FXML
+    public void disconnection() {
+        try {
+            if (socket != null && socket.isConnected()) {
+                log("Disconnecting");
+                sendToServer(EventPOP3.QUIT);
+                socket.close();
+                state = States.AUTHORIZATION;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void refreshMailList(){
+        try {
+            if (socket != null && socket.isConnected() && state.equals(States.TRANSACTION)){
+                log("Refreshing mail list");
+                messageNumber = 0;
+                sendToServer(EventPOP3.STAT);
+                if (messageNumber > 0){
+                    for (int i=0; i <= messageNumber ; i++){
+                        sendToServer(EventPOP3.RETR,i+"");
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     public void login() {
         if (socket != null && socket.isConnected() && state.equals(States.AUTHORIZATION)) {
             try {
                 log("Loging in your Mail Box");
                 String passwordMD5 = new String(MessageDigest.getInstance("MD5").digest(getPassword().getBytes()), StandardCharsets.UTF_8);
                 sendToServer(EventPOP3.APOP, getUserName(), passwordMD5);
-                //log("Waiting for connection");
-                //recieveFromServer(EventPOP3.APOP);
+                sendToServer(EventPOP3.RETR, "1");
             } catch (Exception e) {
                 e.printStackTrace();
             }

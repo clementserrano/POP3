@@ -59,7 +59,9 @@ public class FrameController {
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
 
-            Platform.runLater(new ReceptionThread(this));
+            //Platform.runLater(new ReceptionThread(this));
+            new Thread(new ReceptionThread(this)).start();
+
         } catch (Exception e) {
             log("Failed to connect");
             e.printStackTrace();
@@ -73,8 +75,8 @@ public class FrameController {
                 log("Loging in your Mail Box");
                 String passwordMD5 = new String(MessageDigest.getInstance("MD5").digest(getPassword().getBytes()), StandardCharsets.UTF_8);
                 sendToServer(EventPOP3.APOP, getUserName(), passwordMD5);
-                log("Waiting for connection");
-                recieveFromServer(EventPOP3.APOP);
+                //log("Waiting for connection");
+                //recieveFromServer(EventPOP3.APOP);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -31,54 +31,21 @@ public class ReceptionThread implements Runnable {
             BufferedReader input = new BufferedReader(new InputStreamReader(frameController.getInputStream()));
             BufferedWriter output = new BufferedWriter(new OutputStreamWriter(frameController.getOutputStream()));
 
-            if ((recievedString = input.readLine()) != null) {
-                String[] splitedString = recievedString.split(" ");
-                frameController.log(recievedString);
-                if (splitedString[0].contains(Constants.ok)){
-                    switch (eventPOP3){
+            while (frameController.getSocket().isConnected()) {
+                if ((recievedString = input.readLine()) != null) {
+                    String[] splitedString = recievedString.split(" ");
 
-                        case APOP:
-                            frameController.log("Authentication OK");
-                            frameController.setState(States.TRANSACTION);
-                            break;
-
-                        case STAT:
-                            int nombreMessageDepotCourrier = Integer.parseInt(splitedString[1]);
-                            int tailleDepotCourrierOctet = Integer.parseInt(splitedString[2]);
-                            frameController.log("+OK "+nombreMessageDepotCourrier +" "+ tailleDepotCourrierOctet);
-                            break;
-
-                        case RETR:
-                            int tailleMessage = Integer.parseInt(splitedString[1]);
-                            frameController.log("+OK "+tailleMessage);
-                            // TODO reception du message
-                            break;
-
-                        case QUIT:
-                            // TODO disconnect
-                            break;
-                    }
-                }
-
-                else if (splitedString[0].contains(Constants.err)){
-                    switch (eventPOP3){
-                        case APOP:
-                            // TODO
-                            break;
-                        case STAT:
-                            // TODO
-                            break;
-                        case RETR:
-                            // TODO
-                            break;
-                        case QUIT:
-                            // TODO
-                            break;
+                    if (splitedString[0].contains(Constants.ok)) {
+                        frameController.log(recievedString);
+                    } else if (splitedString[0].contains(Constants.err)) {
+                        frameController.log(recievedString);
                     }
                 }
             }
-        }catch (Exception e){
+        } catch(Exception e){
             e.printStackTrace();
+            frameController.log("disconnected");
+            frameController.setState(States.AUTHORIZATION);
         }
     }
 

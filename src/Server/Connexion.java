@@ -64,30 +64,40 @@ public class Connexion implements Runnable {
                                                 .equals(pass)) {
                                             user = param;
                                             boiteMail = boitesMail.get(user);
-                                            out.write("+OK " + user + " a " + boiteMail.size() + " messages.\r\n");
+                                            String reponse = "+OK " + user + " a " + boiteMail.size() + " messages.";
+                                            out.write(reponse + "\r\n");
+                                            System.out.println("Server said : " + reponse);
                                         }
                                     }
                                     break;
                                 case TRANSACTION:
-                                    out.write("Commande " + message + " ignorée\r\n");
+                                    String reponse = "Commande " + message + " ignorée";
+                                    out.write(reponse + "\r\n");
+                                    System.out.println("Server said : " + reponse);
                                     break;
                             }
                             break;
                         case STAT:
                             switch (etat) {
                                 case AUTHORIZATION:
-                                    out.write("Commande " + message + " ignorée\r\n");
+                                    String reponse = "Commande " + message + " ignorée";
+                                    out.write(reponse + "\r\n");
+                                    System.out.println("Server said : " + reponse);
                                     break;
                                 case TRANSACTION:
-                                    out.write("+OK nbMails : " + boiteMail.size() + " taille : " + nbOctet(boiteMail)
-                                            + " octets\r\n");
+                                    String reponse2 = "+OK nbMails : " + boiteMail.size() + " taille : "
+                                            + nbOctet(boiteMail) + " octets";
+                                    out.write(reponse2 + "\r\n");
+                                    System.out.println("Server said : " + reponse2);
                                     break;
                             }
                             break;
                         case RETR:
                             switch (etat) {
                                 case AUTHORIZATION:
-                                    out.write("Commande " + message + " ignorée\r\n");
+                                    String reponse = "Commande " + message + " ignorée";
+                                    out.write(reponse + "\r\n");
+                                    System.out.println("Server said : " + reponse);
                                     break;
                                 case TRANSACTION:
                                     // Vérifie si le numéro correspond
@@ -97,9 +107,12 @@ public class Connexion implements Runnable {
                                         Mail mail = boiteMail.get(nMail);
                                         String mes = "+OK " + mail.getNbBytes() + " octets\n";
                                         mes += mail;
-                                        out.write(mes+"\r\n");
+                                        out.write(mes + "\r\n");
+                                        System.out.println("Server said : " + mes);
                                     } else {
-                                        out.write("-ERR\r\n");
+                                        String reponse2 = "-ERR";
+                                        out.write(reponse2 + "\r\n");
+                                        System.out.println("Server said : " + reponse2);
                                     }
                                     break;
                             }

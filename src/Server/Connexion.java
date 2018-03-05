@@ -4,10 +4,7 @@ import Helpers.ConsoleColor;
 import Helpers.EventPOP3;
 import Helpers.States;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.Socket;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -38,6 +35,7 @@ public class Connexion implements Runnable {
         try {
             System.out.println("Server.Server.ReceptionAsyncTask Thread launched");
             System.out.println(socket);
+
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
@@ -66,40 +64,31 @@ public class Connexion implements Runnable {
                                         if (passInDB.equals(pass)) {
                                             user = param;
                                             boiteMail = boitesMail.get(user);
-                                            String reponse = "+OK " + user + " a " + boiteMail.size() + " messages.";
-                                            out.write(reponse + "\r\n");
-                                            System.out.println("Server said : " + reponse);
+                                            writeAndPrint(out, "+OK " + user + " a " + boiteMail.size() + " messages.");
+                                            etat = States.TRANSACTION;
                                         }
                                     }
                                     break;
                                 case TRANSACTION:
-                                    String reponse = "Commande " + message + " ignorée";
-                                    out.write(reponse + "\r\n");
-                                    System.out.println("Server said : " + reponse);
+                                    writeAndPrint(out, "Commande " + message + " ignorée");
                                     break;
                             }
                             break;
                         case STAT:
                             switch (etat) {
                                 case AUTHORIZATION:
-                                    String reponse = "Commande " + message + " ignorée";
-                                    out.write(reponse + "\r\n");
-                                    System.out.println("Server said : " + reponse);
+                                    writeAndPrint(out, "Commande " + message + " ignorée");
                                     break;
                                 case TRANSACTION:
-                                    String reponse2 = "+OK nbMails : " + boiteMail.size() + " taille : "
-                                            + nbOctet(boiteMail) + " octets";
-                                    out.write(reponse2 + "\r\n");
-                                    System.out.println("Server said : " + reponse2);
+                                    writeAndPrint(out, "+OK nbMails : " + boiteMail.size()
+                                            + " taille : " + nbOctet(boiteMail) + " octets");
                                     break;
                             }
                             break;
                         case RETR:
                             switch (etat) {
                                 case AUTHORIZATION:
-                                    String reponse = "Commande " + message + " ignorée";
-                                    out.write(reponse + "\r\n");
-                                    System.out.println("Server said : " + reponse);
+                                    writeAndPrint(out,"Commande " + message + " ignorée");
                                     break;
                                 case TRANSACTION:
                                     // Vérifie si le numéro correspond
@@ -107,14 +96,9 @@ public class Connexion implements Runnable {
                                     if (boiteMail.keySet().contains(nMail)) {
                                         // Construit la réponse
                                         Mail mail = boiteMail.get(nMail);
-                                        String mes = "+OK " + mail.getNbBytes() + " octets\n";
-                                        mes += mail;
-                                        out.write(mes + "\r\n");
-                                        System.out.println("Server said : " + mes);
+                                        writeAndPrint(out, "+OK " + mail.getNbBytes() + " octets\n" + mail);
                                     } else {
-                                        String reponse2 = "-ERR";
-                                        out.write(reponse2 + "\r\n");
-                                        System.out.println("Server said : " + reponse2);
+                                        writeAndPrint(out, "-ERR");
                                     }
                                     break;
                             }
@@ -157,5 +141,11 @@ public class Connexion implements Runnable {
         System.out.print(ConsoleColor.ANSI_CYAN);
         System.out.print(socket.getInetAddress() + " said : " + ConsoleColor.ANSI_RESET);
         System.out.println(message);
+    }
+
+    private void writeAndPrint(BufferedWriter out, String message) throws IOException {
+        out.write(message + "\r\n");
+        out.flush();
+        System.out.println("Server said : " + message);
     }
 }

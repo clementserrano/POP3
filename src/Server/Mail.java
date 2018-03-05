@@ -74,7 +74,7 @@ public class Mail {
                 .append("To: ").append(to).append("\n")
                 .append("Subject: ").append(subject).append("\n")
                 .append("Date: ").append(date.toString()).append("\n")
-                .append("Message-ID").append(message_id).append("\n\n")
+                .append("Message-ID: ").append(message_id).append("\n\n")
                 .append(content).append("\n.");
         return sb.toString();
     }

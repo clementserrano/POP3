@@ -1,9 +1,10 @@
 package Client.GUI.Test;
 
-import Client.Connexion;
-import Helpers.Constants;
+import Client.ReceptionAsyncTask;
+import Client.ReceptionThread;
 import Helpers.EventPOP3;
 import Helpers.States;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -51,13 +52,14 @@ public class FrameController {
             log("Already connected");
             return;
         }
-
         try {
             log("Connecting");
             socket = new Socket(InetAddress.getByName(getHostAdress()), Integer.parseInt(getPort()));
             log("Connected");
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
+
+            Platform.runLater(new ReceptionThread(this));
         } catch (Exception e) {
             log("Failed to connect");
             e.printStackTrace();
@@ -110,7 +112,13 @@ public class FrameController {
     public InputStream getInputStream() {
         return inputStream;
     }
+    public States getState() {
+        return state;
+    }
 
+    public void setState(States state) {
+        this.state = state;
+    }
 
     /**
      * UTILS
@@ -123,65 +131,13 @@ public class FrameController {
             stringBuilder.append(separator);
             stringBuilder.append(arg);
         }
+        stringBuilder.append("\r\n");
         log("(Debug) sending : " + stringBuilder.toString());
         outputStream.write(stringBuilder.toString().getBytes());
     }
 
     private void recieveFromServer(EventPOP3 eventPOP3) {
-        try {
-            String recievedString;
-            BufferedReader input = new BufferedReader(new InputStreamReader(getInputStream()));
-            BufferedWriter output = new BufferedWriter(new OutputStreamWriter(getOutputStream()));
-
-            if ((recievedString = input.readLine()) != null) {
-                String[] splitedString = recievedString.split(" ");
-
-                if (splitedString[0].contains(Constants.ok)){
-                    switch (eventPOP3){
-
-                        case APOP:
-                            log("Connected");
-                            state = States.TRANSACTION;
-                            break;
-
-                        case STAT:
-                            int nombreMessageDepotCourrier = Integer.parseInt(splitedString[1]);
-                            int tailleDepotCourrierOctet = Integer.parseInt(splitedString[2]);
-                            log("+OK "+nombreMessageDepotCourrier +" "+ tailleDepotCourrierOctet);
-                            break;
-
-                        case RETR:
-                            int tailleMessage = Integer.parseInt(splitedString[1]);
-                            log("+OK "+tailleMessage);
-                            // TODO reception du message
-                            break;
-
-                        case QUIT:
-                            // TODO disconnect
-                            break;
-                    }
-                }
-
-                else if (splitedString[0].contains(Constants.err)){
-                    switch (eventPOP3){
-                        case APOP:
-                            // TODO
-                            break;
-                        case STAT:
-                            // TODO
-                            break;
-                        case RETR:
-                            // TODO
-                            break;
-                        case QUIT:
-                            // TODO
-                            break;
-                    }
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        new Thread(new ReceptionThread(this, eventPOP3)).start();
     }
 
 }

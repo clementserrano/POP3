@@ -9,6 +9,8 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +36,7 @@ public class Connexion implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("Server.Server.Connexion Thread launched");
+            System.out.println("Server.Server.ReceptionAsyncTask Thread launched");
             System.out.println(socket);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             BufferedWriter out = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -59,9 +61,9 @@ public class Connexion implements Runnable {
                                     // Vérifie si user existe
                                     if (users.keySet().contains(param)) {
                                         // Vérifie si pass OK
-                                        String pass = array[2];
-                                        if (MessageDigest.getInstance("MD5").digest(users.get(param).getBytes())
-                                                .equals(pass)) {
+                                        String pass = new String(array[2].getBytes(), StandardCharsets.UTF_8);
+                                        String passInDB =new String(MessageDigest.getInstance("MD5").digest(users.get(param).getBytes()), StandardCharsets.UTF_8);
+                                        if (passInDB.equals(pass)) {
                                             user = param;
                                             boiteMail = boitesMail.get(user);
                                             out.write("+OK " + user + " a " + boiteMail.size() + " messages.\r\n");
@@ -121,7 +123,7 @@ public class Connexion implements Runnable {
 
                 }
             }
-            System.out.println("Server.Server.Connexion closed");
+            System.out.println("Server.Server.ReceptionAsyncTask closed");
             socket.close();
 
         } catch (Exception e) {

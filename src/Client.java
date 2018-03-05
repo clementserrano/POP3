@@ -40,7 +40,7 @@ public class Client extends ConsoleApp {
             log("Disconnected", ConsoleColor.ANSI_RED);
 
         }catch (ConnectException connectException){
-            log("Unable to connect : Server.Server.Connexion refused. The server may not be running.", ConsoleColor.ANSI_RED);
+            log("Unable to connect : Server.Server.ReceptionAsyncTask refused. The server may not be running.", ConsoleColor.ANSI_RED);
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -74,6 +74,8 @@ public class MailController implements Initializable {
         }
     }
 
+
+
     private void log(String string) {
         console.appendText(string);
         console.appendText("\n");

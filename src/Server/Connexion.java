@@ -97,7 +97,14 @@ public class Connexion implements Runnable {
                                     break;
                                 case TRANSACTION:
                                     // Vérifie si le numéro correspond
-                                    Integer nMail = Integer.valueOf(param);
+                                    Integer nMail;
+                                    if (param != null) {
+                                        nMail = Integer.valueOf(param);
+                                    }
+                                    else {
+                                        writeAndPrint(out, "-ERR");
+                                        break;
+                                    }
                                     if (boiteMail.keySet().contains(nMail)) {
                                         // Construit la réponse
                                         Mail mail = boiteMail.get(nMail);

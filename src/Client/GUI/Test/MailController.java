@@ -3,6 +3,7 @@ package Client.GUI.Test;
 import Client.ReceptionThread;
 import Helpers.EventPOP3;
 import Helpers.States;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,6 +34,8 @@ public class MailController extends Observable implements Initializable {
     private static OutputStream outputStream;
     public int messageNumber;
     public Thread receptionThread;
+    private AnchorPane root;
+    private Scene scene;
 
     private States state = States.AUTHORIZATION;
 
@@ -131,7 +134,6 @@ public class MailController extends Observable implements Initializable {
     private void changeScreens(ActionEvent event) {
         try {
             Stage stage;
-            AnchorPane root;
             if (event.getSource() == loginBtn) {
 
                 stage = (Stage) loginBtn.getScene().getWindow();
@@ -142,7 +144,7 @@ public class MailController extends Observable implements Initializable {
                 stage = (Stage) logoutBtn.getScene().getWindow();
                 root = FXMLLoader.load(getClass().getResource("/Client/GUI/Test/loginScreen.fxml"));
             }
-            Scene scene = new Scene(root);
+            scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
         } catch (Exception ex) {
@@ -153,9 +155,22 @@ public class MailController extends Observable implements Initializable {
     private void setupTextAreas(){
         console.setWrapText(true);
     }
-    public synchronized void log(String string){
-        getConsole().appendText(string);
-        getConsole().appendText("\n");
+    public void log(String string){
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if (scene != null) {
+                    TextArea whereToLog = (TextArea) scene.lookup("#console");
+                    whereToLog.appendText(string);
+                    whereToLog.appendText("\n");
+                }
+                else {
+                    console.appendText(string);
+                    console.appendText("\n");
+                }
+                System.out.println(string);
+            }
+        });
     }
 
     public String getHostAdress(){

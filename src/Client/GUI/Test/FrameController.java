@@ -1,10 +1,8 @@
 package Client.GUI.Test;
 
-import Client.ReceptionAsyncTask;
 import Client.ReceptionThread;
 import Helpers.EventPOP3;
 import Helpers.States;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -24,6 +22,7 @@ public class FrameController {
     private InputStream inputStream;
     private OutputStream outputStream;
     public int messageNumber;
+    public Thread receptionThread;
 
     private States state = States.AUTHORIZATION;
 
@@ -65,7 +64,9 @@ public class FrameController {
             outputStream = socket.getOutputStream();
 
             //Platform.runLater(new ReceptionThread(this));
-            new Thread(new ReceptionThread(this)).start();
+            receptionThread = new Thread(new ReceptionThread(this));
+            receptionThread.setDaemon(true);
+            receptionThread.start();
 
         } catch (Exception e) {
             log("Failed to connect");
@@ -94,10 +95,18 @@ public class FrameController {
                 log("Refreshing mail list");
                 messageNumber = 0;
                 sendToServer(EventPOP3.STAT);
-                if (messageNumber > 0){
-                    for (int i=0; i <= messageNumber ; i++){
-                        sendToServer(EventPOP3.RETR,i+"");
-                    }
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void retriveMail(){
+        try {
+            if (messageNumber > 0) {
+                for (int i = 0; i < messageNumber; i++) {
+                    sendToServer(EventPOP3.RETR, i + "");
                 }
             }
         }catch (Exception e){
@@ -113,12 +122,18 @@ public class FrameController {
                 String passwordMD5 = new String(MessageDigest.getInstance("MD5").digest(getPassword().getBytes()), StandardCharsets.UTF_8);
                 sendToServer(EventPOP3.APOP, getUserName(), passwordMD5);
                 sendToServer(EventPOP3.RETR, "1");
+                state = States.TRANSACTION;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
+    public void shutDown(){
+        if(receptionThread.isAlive()){
+            receptionThread.interrupt();
+        }
+    }
 
     private void setupTextAreas(){
         console.setWrapText(true);
@@ -174,8 +189,5 @@ public class FrameController {
         outputStream.write(stringBuilder.toString().getBytes());
     }
 
-    private void recieveFromServer(EventPOP3 eventPOP3) {
-        new Thread(new ReceptionThread(this, eventPOP3)).start();
-    }
 
 }

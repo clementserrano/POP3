@@ -50,8 +50,10 @@ public class Connexion implements Runnable {
 
                     String[] array = message.split(" ");
                     String evt = array[0];
-                    String param = array[1];
-
+                    String param = "";
+                    if (array.length > 1) {
+                        param = array[1];
+                    }
                     switch (EventPOP3.valueOf(evt)) {
                         case APOP:
                             switch (etat) {

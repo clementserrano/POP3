@@ -35,14 +35,19 @@ public class ReceptionThread implements Runnable {
                 if ((recievedString = input.readLine()) != null) {
                     String[] splitedString = recievedString.split(" ");
 
+                    // OK
                     if (splitedString[0].contains(Constants.ok)) {
                         frameController.log(recievedString);
-                        if (splitedString.length == 5){
+                        if (splitedString.length == 8){
                             frameController.messageNumber = Integer.parseInt(splitedString[3]);
+                            frameController.retriveMail();
                         }
-                    } else if (splitedString[0].contains(Constants.err)) {
+                    }
+                    // ERR
+                    else if (splitedString[0].contains(Constants.err)) {
                         frameController.log(recievedString);
                     }
+                    // DATA
                     else {
                         if(!recievedString.equals(".")){
                             frameController.log(recievedString);

@@ -1,3 +1,4 @@
+/*
 package Client.GUI.Test;
 
 import Client.ReceptionThread;
@@ -27,21 +28,9 @@ public class FrameController {
     private States state = States.AUTHORIZATION;
 
     @FXML
-    private TextField hostAdress;
+    private TextField hostAdress, port, userName, password;
     @FXML
-    private TextField port;
-    @FXML
-    private TextField userName;
-    @FXML
-    private TextField password;
-    @FXML
-    private Button connect;
-    @FXML
-    private Button disconnect;
-    @FXML
-    private Button login;
-    @FXML
-    private Button refresh;
+    private Button connect, disconnect, login, refresh;
     @FXML
     private ListView mailList;
     @FXML
@@ -173,9 +162,11 @@ public class FrameController {
         this.state = state;
     }
 
-    /**
+    */
+/**
      * UTILS
-     */
+     *//*
+
     private void sendToServer(EventPOP3 eventPOP3, String... args) throws IOException {
         String separator = " ";
         StringBuilder stringBuilder = new StringBuilder();
@@ -191,3 +182,4 @@ public class FrameController {
 
 
 }
+*/

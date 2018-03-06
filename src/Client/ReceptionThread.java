@@ -1,6 +1,7 @@
 package Client;
 
 import Client.GUI.Test.FrameController;
+import Client.GUI.Test.MailController;
 import Helpers.Constants;
 import Helpers.EventPOP3;
 import Helpers.States;
@@ -20,8 +21,8 @@ public class ReceptionThread implements Runnable {
         this.eventPOP3 = eventPOP3;
     }
 
-    public ReceptionThread(FrameController frameController){
-        this.frameController = frameController;
+    public ReceptionThread(MailController mailController){
+        this.frameController = mailController;
     }
 
     @Override

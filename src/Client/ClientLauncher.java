@@ -18,6 +18,7 @@ public class ClientLauncher extends Application {
     static AnchorPane root;
     private FXMLLoader fxmlLoader;
     private final URL frameURL = getClass().getResource("/Client/GUI/Test/frame.fxml");
+    private final URL loginURL = getClass().getResource("/Client/GUI/Test/loginScreen.fxml");
 
     public static void main(String[] args) {
         Application.launch(ClientLauncher.class, args);
@@ -25,9 +26,11 @@ public class ClientLauncher extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        fxmlLoader = new FXMLLoader(frameURL);
+        //fxmlLoader = new FXMLLoader(frameURL);
+
+        fxmlLoader = new FXMLLoader(loginURL);
         root = fxmlLoader.load();
-        FrameController frameController = fxmlLoader.getController();
+        primaryStage.setTitle("Messagerie");
         primaryStage.setScene(new Scene(root, Constants.frameDimension.width,Constants.frameDimension.height));
         primaryStage.show();
         /*

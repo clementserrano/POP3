@@ -25,7 +25,7 @@
                 <Label layoutX="70.0" layoutY="296.0" text="Mdp :" />
             <PasswordField fx:id="password" layoutX="105.0" layoutY="292.0" prefHeight="25.0" prefWidth="134.0" promptText="Mot de passe" />
                 <Button fx:id="loginBtn" layoutX="246.0" layoutY="279.0" mnemonicParsing="false" onAction="#login" text="Authentification" />
-                <Label alignment="CENTER" layoutX="210.0" layoutY="33.0" style="-fx-background-color: transparent;" text="Connexion aux mails">
+                <Label alignment="CENTER" layoutX="184.0" layoutY="32.0" style="-fx-background-color: transparent;" text="Connexion aux mails">
                     <font>
                         <Font name="News Gothic" size="24.0" />
                     </font>

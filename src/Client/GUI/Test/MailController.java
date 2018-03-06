@@ -1,5 +1,8 @@
 package Client.GUI.Test;
 
+import Client.ReceptionThread;
+import Helpers.EventPOP3;
+import Helpers.States;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -12,17 +15,30 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.io.*;
+import java.net.InetAddress;
+import java.net.Socket;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MailController implements Initializable {
 
+    private Socket socket;
+    private InputStream inputStream;
+    private OutputStream outputStream;
+    public int messageNumber;
+    public Thread receptionThread;
+
+    private States state = States.AUTHORIZATION;
+
     @FXML
-    private Button connectBtn, loginBtn, logoutBtn;
+    private Button connectBtn, loginBtn, statBtn, retrBtn, logoutBtn;
     @FXML
-    private TextField hostAdress, port, userName, password;
+    private TextField hostAdress, port, userName, password, statTxt, mailNb;
     @FXML
     private ListView mailList;
     @FXML
@@ -37,20 +53,87 @@ public class MailController implements Initializable {
     @FXML
     public void connect() {
         log("Trying to connect to " + hostAdress.getText() + " on port " + port.getText());
+        setupTextAreas();
+        if (socket != null && socket.isConnected()){
+            log("Already connected");
+            return;
+        }
+        try {
+            log("Connecting");
+            socket = new Socket(InetAddress.getByName(getHostAdress()), Integer.parseInt(getPort()));
+            log("Connected");
+            inputStream = socket.getInputStream();
+            outputStream = socket.getOutputStream();
+
+            //Platform.runLater(new ReceptionThread(this));
+            receptionThread = new Thread(new ReceptionThread(this));
+            receptionThread.setDaemon(true);
+            receptionThread.start();
+
+        } catch (Exception e) {
+            log("Failed to connect");
+            e.printStackTrace();
+        }
+
     }
 
     @FXML
     public void login(ActionEvent event) {
-        // TODO : Check PWD & user
-        log("Logging in your Mail Box");
+        if (socket != null && socket.isConnected() && state.equals(States.AUTHORIZATION)) {
+            try {
+                log("Loging in your Mail Box");
+                String passwordMD5 = new String(MessageDigest.getInstance("MD5").digest(getPassword().getBytes()), StandardCharsets.UTF_8);
+                sendToServer(EventPOP3.APOP, getUserName(), passwordMD5);
+                sendToServer(EventPOP3.RETR, "1");
+                state = States.TRANSACTION;
+                // Chargement de la fenêtre des mails si succès de l'authentification
+                changeScreens(event);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
-        // Chargement de la fenêtre des mails si succès de l'authentification
-        changeScreens(event);
+    @FXML
+    public void statMailInfo(){
+        try {
+            if (socket != null && socket.isConnected() && state.equals(States.TRANSACTION)){
+                log("Refreshing mail list");
+                messageNumber = 0;
+                sendToServer(EventPOP3.STAT);
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void retrieveMail(){
+        try {
+            if (messageNumber > 0) {
+                for (int i = 0; i < messageNumber; i++) {
+                    sendToServer(EventPOP3.RETR, i + "");
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @FXML
     public void logout(ActionEvent event) {
-        changeScreens(event);
+        try {
+            if (socket != null && socket.isConnected()) {
+                log("Disconnecting");
+                sendToServer(EventPOP3.QUIT);
+                socket.close();
+                state = States.AUTHORIZATION;
+                changeScreens(event);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void changeScreens(ActionEvent event) {
@@ -74,8 +157,57 @@ public class MailController implements Initializable {
         }
     }
 
-    private void log(String string) {
+    private void setupTextAreas(){
+        console.setWrapText(true);
+        mailContent.setWrapText(true);
+    }
+    public void log(String string){
         console.appendText(string);
         console.appendText("\n");
+    }
+
+    public String getHostAdress(){
+        return hostAdress.getText();
+    }
+    public String getPort(){
+        return port.getText();
+    }
+    public String getUserName(){
+        return userName.getText();
+    }
+    public String getPassword(){
+        return password.getText();
+    }
+    public Socket getSocket() {
+        return socket;
+    }
+    public OutputStream getOutputStream() {
+        return outputStream;
+    }
+    public InputStream getInputStream() {
+        return inputStream;
+    }
+    public States getState() {
+        return state;
+    }
+
+    public void setState(States state) {
+        this.state = state;
+    }
+
+    /**
+     * UTILS
+     */
+    private void sendToServer(EventPOP3 eventPOP3, String... args) throws IOException {
+        String separator = " ";
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(eventPOP3.getCmd());
+        for (String arg: args) {
+            stringBuilder.append(separator);
+            stringBuilder.append(arg);
+        }
+        stringBuilder.append("\r\n");
+        log("(Debug) sending : " + stringBuilder.toString());
+        outputStream.write(stringBuilder.toString().getBytes());
     }
 }

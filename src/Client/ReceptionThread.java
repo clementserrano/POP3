@@ -11,6 +11,8 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Observable;
+import java.util.Observer;
 
 public class ReceptionThread implements Runnable {
 
@@ -60,4 +62,12 @@ public class ReceptionThread implements Runnable {
             mailController.setState(States.AUTHORIZATION);
         }
     }
+
+    public MailController getMailController() {
+        return mailController;
+    }
+    public void setMailController(MailController mailController) {
+        this.mailController = mailController;
+    }
+
 }

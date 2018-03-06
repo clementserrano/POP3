@@ -21,15 +21,16 @@ import java.net.Socket;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MailController implements Initializable {
+public class MailController extends Observable implements Initializable {
 
-    private Socket socket;
-    private InputStream inputStream;
-    private OutputStream outputStream;
+    private static Socket socket;
+    private static InputStream inputStream;
+    private static OutputStream outputStream;
     public int messageNumber;
     public Thread receptionThread;
 
@@ -43,6 +44,7 @@ public class MailController implements Initializable {
     private ListView mailList;
     @FXML
     private TextArea console, mailContent;
+
 
 
     @Override
@@ -135,6 +137,7 @@ public class MailController implements Initializable {
                 stage = (Stage) loginBtn.getScene().getWindow();
                 root = FXMLLoader.load(getClass().getResource("/Client/GUI/Test/mailScreen.fxml"));
 
+
             } else {
                 stage = (Stage) logoutBtn.getScene().getWindow();
                 root = FXMLLoader.load(getClass().getResource("/Client/GUI/Test/loginScreen.fxml"));
@@ -150,9 +153,9 @@ public class MailController implements Initializable {
     private void setupTextAreas(){
         console.setWrapText(true);
     }
-    public void log(String string){
-        console.appendText(string);
-        console.appendText("\n");
+    public synchronized void log(String string){
+        getConsole().appendText(string);
+        getConsole().appendText("\n");
     }
 
     public String getHostAdress(){
@@ -178,6 +181,9 @@ public class MailController implements Initializable {
     }
     public States getState() {
         return state;
+    }
+    public TextArea getConsole() {
+        return console;
     }
 
     public void setState(States state) {

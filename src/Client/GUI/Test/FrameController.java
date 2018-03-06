@@ -69,7 +69,7 @@ public class FrameController {
             outputStream = socket.getOutputStream();
 
             //Platform.runLater(new ReceptionThread(this));
-            receptionThread = new Thread(new ReceptionThread(this));
+            //receptionThread = new Thread(new ReceptionThread(this));
             receptionThread.setDaemon(true);
             receptionThread.start();
 

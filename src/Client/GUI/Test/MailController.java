@@ -38,7 +38,7 @@ public class MailController implements Initializable {
     @FXML
     private Button connectBtn, loginBtn, statBtn, retrBtn, logoutBtn;
     @FXML
-    private TextField hostAdress, port, userName, password, statTxt, mailNb;
+    private TextField hostAdress, port, userName, password, mailNb;
     @FXML
     private ListView mailList;
     @FXML
@@ -84,7 +84,6 @@ public class MailController implements Initializable {
                 log("Loging in your Mail Box");
                 String passwordMD5 = new String(MessageDigest.getInstance("MD5").digest(getPassword().getBytes()), StandardCharsets.UTF_8);
                 sendToServer(EventPOP3.APOP, getUserName(), passwordMD5);
-                sendToServer(EventPOP3.RETR, "1");
                 state = States.TRANSACTION;
                 // Chargement de la fenêtre des mails si succès de l'authentification
                 changeScreens(event);
@@ -96,14 +95,9 @@ public class MailController implements Initializable {
 
     @FXML
     public void statMailInfo(){
-        try {
-            if (socket != null && socket.isConnected() && state.equals(States.TRANSACTION)){
-                log("Refreshing mail list");
-                messageNumber = 0;
-                sendToServer(EventPOP3.STAT);
-
-            }
-        }catch (Exception e){
+        try{
+            sendToServer(EventPOP3.STAT);
+        }catch (Exception e ){
             e.printStackTrace();
         }
     }
@@ -111,12 +105,8 @@ public class MailController implements Initializable {
     @FXML
     public void retrieveMail(){
         try {
-            if (messageNumber > 0) {
-                for (int i = 0; i < messageNumber; i++) {
-                    sendToServer(EventPOP3.RETR, i + "");
-                }
-            }
-        }catch (Exception e){
+            sendToServer(EventPOP3.RETR, mailNb.getText());
+        }catch (Exception e ){
             e.printStackTrace();
         }
     }
@@ -159,7 +149,6 @@ public class MailController implements Initializable {
 
     private void setupTextAreas(){
         console.setWrapText(true);
-        mailContent.setWrapText(true);
     }
     public void log(String string){
         console.appendText(string);

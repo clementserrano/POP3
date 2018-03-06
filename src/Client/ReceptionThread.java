@@ -14,110 +14,50 @@ import java.io.OutputStreamWriter;
 
 public class ReceptionThread implements Runnable {
 
-    private FrameController frameController;
+    private MailController mailController;
     private EventPOP3 eventPOP3;
 
-    public ReceptionThread(FrameController frameController, EventPOP3 eventPOP3){
-        this.frameController = frameController;
+    public ReceptionThread(MailController frameController, EventPOP3 eventPOP3){
+        this.mailController = frameController;
         this.eventPOP3 = eventPOP3;
     }
 
     public ReceptionThread(MailController mailController){
-        this.frameController = mailController;
+        this.mailController = mailController;
     }
 
     @Override
     public void run() {
         try {
             String recievedString;
-            BufferedReader input = new BufferedReader(new InputStreamReader(frameController.getInputStream()));
-            BufferedWriter output = new BufferedWriter(new OutputStreamWriter(frameController.getOutputStream()));
+            BufferedReader input = new BufferedReader(new InputStreamReader(mailController.getInputStream()));
+            BufferedWriter output = new BufferedWriter(new OutputStreamWriter(mailController.getOutputStream()));
 
-            while (frameController.getSocket().isConnected()) {
+            while (mailController.getSocket().isConnected()) {
                 if ((recievedString = input.readLine()) != null) {
                     String[] splitedString = recievedString.split(" ");
                     // OK
                     if (splitedString[0].contains(Constants.ok)) {
-                        frameController.log(recievedString);
+                        mailController.log(recievedString);
                     }
                     // ERR
                     else if (splitedString[0].contains(Constants.err)) {
-                        frameController.log(recievedString);
+                        mailController.log(recievedString);
                     }
                     // DATA
                     else {
                         if(!recievedString.equals(".")){
-                            frameController.log(recievedString);
+                            mailController.log(recievedString);
                         }
                         else {
-                            frameController.log(recievedString);
+                            mailController.log(recievedString);
                         }
                     }
                 }
             }
         } catch(Exception e){
-            frameController.log("disconnected");
-            frameController.setState(States.AUTHORIZATION);
+            mailController.log("disconnected");
+            mailController.setState(States.AUTHORIZATION);
         }
     }
-
-    /*
-    @Override
-    public void run() {
-        try {
-            String recievedString;
-            BufferedReader input = new BufferedReader(new InputStreamReader(frameController.getInputStream()));
-            BufferedWriter output = new BufferedWriter(new OutputStreamWriter(frameController.getOutputStream()));
-
-            if ((recievedString = input.readLine()) != null) {
-                String[] splitedString = recievedString.split(" ");
-                frameController.log(recievedString);
-                if (splitedString[0].contains(Constants.ok)){
-                    switch (eventPOP3){
-
-                        case APOP:
-                            frameController.log("Authentication OK");
-                            frameController.setState(States.TRANSACTION);
-                            break;
-
-                        case STAT:
-                            int nombreMessageDepotCourrier = Integer.parseInt(splitedString[1]);
-                            int tailleDepotCourrierOctet = Integer.parseInt(splitedString[2]);
-                            frameController.log("+OK "+nombreMessageDepotCourrier +" "+ tailleDepotCourrierOctet);
-                            break;
-
-                        case RETR:
-                            int tailleMessage = Integer.parseInt(splitedString[1]);
-                            frameController.log("+OK "+tailleMessage);
-                            // TODO reception du message
-                            break;
-
-                        case QUIT:
-                            // TODO disconnect
-                            break;
-                    }
-                }
-
-                else if (splitedString[0].contains(Constants.err)){
-                    switch (eventPOP3){
-                        case APOP:
-                            // TODO
-                            break;
-                        case STAT:
-                            // TODO
-                            break;
-                        case RETR:
-                            // TODO
-                            break;
-                        case QUIT:
-                            // TODO
-                            break;
-                    }
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    */
 }

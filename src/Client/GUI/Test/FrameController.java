@@ -77,6 +77,7 @@ public class FrameController {
                 sendToServer(EventPOP3.APOP, getUserName(), passwordMD5);
                 //log("Waiting for connection");
                 //recieveFromServer(EventPOP3.APOP);
+                sendToServer(EventPOP3.QUIT);
             } catch (Exception e) {
                 e.printStackTrace();
             }

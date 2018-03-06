@@ -6,6 +6,7 @@ import Helpers.States;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -50,7 +51,11 @@ public class Connexion implements Runnable {
 
                     String[] array = message.split(" ");
                     String evt = array[0];
-                    String param = array[1];
+                    String param = null;
+
+                    if(array.length > 1){
+                        param = array[1];
+                    }
 
                     switch (EventPOP3.valueOf(evt)) {
                         case APOP:
@@ -123,9 +128,11 @@ public class Connexion implements Runnable {
             System.out.println("Server.Server.ReceptionAsyncTask closed");
             socket.close();
 
-        } catch (Exception e) {
+        } catch (SocketException e) {
+            System.out.println(socket.getInetAddress() + " : " + e.getMessage());
+        } catch (Exception e2){
             System.out.println("An error occurred");
-            e.printStackTrace();
+            e2.printStackTrace();
         }
     }
 

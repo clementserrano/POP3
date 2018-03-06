@@ -123,6 +123,7 @@ public class MailController extends Observable implements Initializable {
                 log("Disconnecting");
                 sendToServer(EventPOP3.QUIT);
                 socket.close();
+                socket = null;
                 state = States.AUTHORIZATION;
                 changeScreens(event);
             }
@@ -216,8 +217,9 @@ public class MailController extends Observable implements Initializable {
             stringBuilder.append(separator);
             stringBuilder.append(arg);
         }
-        stringBuilder.append("\r\n");
+        log("\n");
         log("(Debug) sending : " + stringBuilder.toString());
+        stringBuilder.append("\r\n");
         outputStream.write(stringBuilder.toString().getBytes());
     }
 }

@@ -35,15 +35,30 @@ public class ReceptionThread implements Runnable {
                 if ((recievedString = input.readLine()) != null) {
                     String[] splitedString = recievedString.split(" ");
 
+                    // OK
                     if (splitedString[0].contains(Constants.ok)) {
                         frameController.log(recievedString);
-                    } else if (splitedString[0].contains(Constants.err)) {
+                        if (splitedString.length == 8){
+                            frameController.messageNumber = Integer.parseInt(splitedString[3]);
+                            frameController.retriveMail();
+                        }
+                    }
+                    // ERR
+                    else if (splitedString[0].contains(Constants.err)) {
                         frameController.log(recievedString);
+                    }
+                    // DATA
+                    else {
+                        if(!recievedString.equals(".")){
+                            frameController.log(recievedString);
+                        }
+                        else {
+                            frameController.log(recievedString);
+                        }
                     }
                 }
             }
         } catch(Exception e){
-            e.printStackTrace();
             frameController.log("disconnected");
             frameController.setState(States.AUTHORIZATION);
         }

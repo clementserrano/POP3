@@ -3,6 +3,13 @@
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.GUI.Test.FrameController">
    <children>
@@ -12,7 +19,7 @@
             <Label layoutX="36.0" layoutY="40.0" text="port" />
             <TextField fx:id="hostAdress" layoutX="89.0" layoutY="10.0" />
             <TextField fx:id="port" layoutX="89.0" layoutY="36.0" />
-            <Button fx:id="connect" layoutX="261.0" layoutY="24.0" mnemonicParsing="false" onMouseClicked="#connect" text="Connexion" />
+            <Button fx:id="connect" layoutX="263.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#connect" text="Connexion" />
             <TextArea fx:id="console" editable="false" layoutX="357.0" layoutY="13.0" prefHeight="373.0" prefWidth="229.0" />
             <Label layoutX="21.0" layoutY="92.0" text="Utilisateur" />
             <Label layoutX="35.0" layoutY="117.0" text="mdp" />
@@ -21,6 +28,8 @@
             <Button fx:id="login" layoutX="275.0" layoutY="101.0" mnemonicParsing="false" onMouseClicked="#login" text="Log In" />
             <ListView fx:id="mailList" layoutX="21.0" layoutY="186.0" prefHeight="200.0" prefWidth="149.0" />
             <TextArea fx:id="mailContent" layoutX="187.0" layoutY="186.0" prefHeight="200.0" prefWidth="149.0" />
+            <Button fx:id="disconnect" layoutX="254.0" layoutY="36.0" mnemonicParsing="false" onAction="#disconnection" onMouseClicked="#connect" text="Déconnection" />
+            <Button fx:id="refresh" layoutX="63.0" layoutY="153.0" mnemonicParsing="false" onAction="#refreshMailList" text="Refresh" />
          </children></Pane>
    </children>
 </AnchorPane>

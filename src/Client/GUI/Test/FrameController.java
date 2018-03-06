@@ -1,10 +1,8 @@
 package Client.GUI.Test;
 
-import Client.ReceptionAsyncTask;
 import Client.ReceptionThread;
 import Helpers.EventPOP3;
 import Helpers.States;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -23,6 +21,8 @@ public class FrameController {
     private Socket socket;
     private InputStream inputStream;
     private OutputStream outputStream;
+    public int messageNumber;
+    public Thread receptionThread;
 
     private States state = States.AUTHORIZATION;
 
@@ -37,7 +37,11 @@ public class FrameController {
     @FXML
     private Button connect;
     @FXML
+    private Button disconnect;
+    @FXML
     private Button login;
+    @FXML
+    private Button refresh;
     @FXML
     private ListView mailList;
     @FXML
@@ -60,10 +64,52 @@ public class FrameController {
             outputStream = socket.getOutputStream();
 
             //Platform.runLater(new ReceptionThread(this));
-            new Thread(new ReceptionThread(this)).start();
+            receptionThread = new Thread(new ReceptionThread(this));
+            receptionThread.setDaemon(true);
+            receptionThread.start();
 
         } catch (Exception e) {
             log("Failed to connect");
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void disconnection() {
+        try {
+            if (socket != null && socket.isConnected()) {
+                log("Disconnecting");
+                sendToServer(EventPOP3.QUIT);
+                socket.close();
+                state = States.AUTHORIZATION;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void refreshMailList(){
+        try {
+            if (socket != null && socket.isConnected() && state.equals(States.TRANSACTION)){
+                log("Refreshing mail list");
+                messageNumber = 0;
+                sendToServer(EventPOP3.STAT);
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void retriveMail(){
+        try {
+            if (messageNumber > 0) {
+                for (int i = 0; i < messageNumber; i++) {
+                    sendToServer(EventPOP3.RETR, i + "");
+                }
+            }
+        }catch (Exception e){
             e.printStackTrace();
         }
     }
@@ -75,15 +121,19 @@ public class FrameController {
                 log("Loging in your Mail Box");
                 String passwordMD5 = new String(MessageDigest.getInstance("MD5").digest(getPassword().getBytes()), StandardCharsets.UTF_8);
                 sendToServer(EventPOP3.APOP, getUserName(), passwordMD5);
-                //log("Waiting for connection");
-                //recieveFromServer(EventPOP3.APOP);
-                sendToServer(EventPOP3.QUIT);
+                sendToServer(EventPOP3.RETR, "1");
+                state = States.TRANSACTION;
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
+    public void shutDown(){
+        if(receptionThread.isAlive()){
+            receptionThread.interrupt();
+        }
+    }
 
     private void setupTextAreas(){
         console.setWrapText(true);
@@ -139,8 +189,5 @@ public class FrameController {
         outputStream.write(stringBuilder.toString().getBytes());
     }
 
-    private void recieveFromServer(EventPOP3 eventPOP3) {
-        new Thread(new ReceptionThread(this, eventPOP3)).start();
-    }
 
 }

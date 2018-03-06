@@ -6,6 +6,7 @@ import Helpers.States;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -33,7 +34,7 @@ public class Connexion implements Runnable {
     @Override
     public void run() {
         try {
-            System.out.println("Server.Server.ReceptionAsyncTask Thread launched");
+            System.out.println("Server : socket opened");
             System.out.println(socket);
 
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -50,10 +51,12 @@ public class Connexion implements Runnable {
 
                     String[] array = message.split(" ");
                     String evt = array[0];
-                    String param = "";
-                    if (array.length > 1) {
+                    String param = null;
+
+                    if(array.length > 1){
                         param = array[1];
                     }
+
                     switch (EventPOP3.valueOf(evt)) {
                         case APOP:
                             switch (etat) {
@@ -62,7 +65,7 @@ public class Connexion implements Runnable {
                                     if (users.keySet().contains(param)) {
                                         // Vérifie si pass OK
                                         String pass = new String(array[2].getBytes(), StandardCharsets.UTF_8);
-                                        String passInDB =new String(MessageDigest.getInstance("MD5").digest(users.get(param).getBytes()), StandardCharsets.UTF_8);
+                                        String passInDB = new String(MessageDigest.getInstance("MD5").digest(users.get(param).getBytes()), StandardCharsets.UTF_8);
                                         if (passInDB.equals(pass)) {
                                             user = param;
                                             boiteMail = boitesMail.get(user);
@@ -119,18 +122,20 @@ public class Connexion implements Runnable {
                         default:
                             break;
                     }
-
                 }
             }
-            System.out.println("Server.Server.ReceptionAsyncTask closed");
             socket.close();
+            System.out.println("Server : socket closed");
 
-        } catch (Exception e) {
+        } catch (SocketException e) {
+            System.out.println(socket.getInetAddress() + " : " + e.getMessage());
+        } catch (Exception e2){
             System.out.println("An error occurred");
-            e.printStackTrace();
+            e2.printStackTrace();
         }
     }
 
+    // Retourne le nombre d'octets total de la boite mail
     private int nbOctet(Map<Integer, Mail> mails) {
         int res = 0;
         for (Map.Entry<Integer, Mail> m : mails.entrySet()) {
@@ -139,12 +144,14 @@ public class Connexion implements Runnable {
         return res;
     }
 
+    // Affiche le message du client sur la console
     private void print(String message) {
         System.out.print(ConsoleColor.ANSI_CYAN);
         System.out.print(socket.getInetAddress() + " said : " + ConsoleColor.ANSI_RESET);
         System.out.println(message);
     }
 
+    // Ecrit sur la connexion et affiche sur la console
     private void writeAndPrint(BufferedWriter out, String message) throws IOException {
         out.write(message + "\r\n");
         out.flush();

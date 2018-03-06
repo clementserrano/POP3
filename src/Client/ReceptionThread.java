@@ -5,6 +5,7 @@ import Client.GUI.Test.MailController;
 import Helpers.Constants;
 import Helpers.EventPOP3;
 import Helpers.States;
+import javafx.application.Platform;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,14 +36,9 @@ public class ReceptionThread implements Runnable {
             while (frameController.getSocket().isConnected()) {
                 if ((recievedString = input.readLine()) != null) {
                     String[] splitedString = recievedString.split(" ");
-
                     // OK
                     if (splitedString[0].contains(Constants.ok)) {
                         frameController.log(recievedString);
-                        if (splitedString.length == 8){
-                            frameController.messageNumber = Integer.parseInt(splitedString[3]);
-                            frameController.retriveMail();
-                        }
                     }
                     // ERR
                     else if (splitedString[0].contains(Constants.err)) {

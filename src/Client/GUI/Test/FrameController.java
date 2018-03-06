@@ -1,9 +1,9 @@
-/*
 package Client.GUI.Test;
 
 import Client.ReceptionThread;
 import Helpers.EventPOP3;
 import Helpers.States;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -28,9 +28,25 @@ public class FrameController {
     private States state = States.AUTHORIZATION;
 
     @FXML
-    private TextField hostAdress, port, userName, password;
+    private TextField hostAdress;
     @FXML
-    private Button connect, disconnect, login, refresh;
+    private TextField port;
+    @FXML
+    private TextField userName;
+    @FXML
+    private TextField password;
+    @FXML
+    private TextField nbMessage;
+    @FXML
+    private Button connect;
+    @FXML
+    private Button disconnect;
+    @FXML
+    private Button login;
+    @FXML
+    private Button stat;
+    @FXML
+    private Button retr;
     @FXML
     private ListView mailList;
     @FXML
@@ -69,7 +85,6 @@ public class FrameController {
             if (socket != null && socket.isConnected()) {
                 log("Disconnecting");
                 sendToServer(EventPOP3.QUIT);
-                socket.close();
                 state = States.AUTHORIZATION;
             }
         }catch (Exception e){
@@ -78,30 +93,43 @@ public class FrameController {
     }
 
     @FXML
+    public void retrive() {
+        try {
+            sendToServer(EventPOP3.RETR, nbMessage.getText());
+        }catch (Exception e ){
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void getStat(){
+        try{
+            sendToServer(EventPOP3.STAT);
+        }catch (Exception e ){
+            e.printStackTrace();
+        }
+    }
+
+
+    /*
+    @FXML
     public void refreshMailList(){
         try {
             if (socket != null && socket.isConnected() && state.equals(States.TRANSACTION)){
                 log("Refreshing mail list");
                 messageNumber = 0;
                 sendToServer(EventPOP3.STAT);
-
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void retriveMail(){
-        try {
-            if (messageNumber > 0) {
-                for (int i = 0; i < messageNumber; i++) {
-                    sendToServer(EventPOP3.RETR, i + "");
+                if (messageNumber > 0) {
+                    for (int i = 0; i < messageNumber; i++) {
+                        sendToServer(EventPOP3.RETR, i + "");
+                    }
                 }
             }
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+    */
 
     @FXML
     public void login() {
@@ -118,19 +146,17 @@ public class FrameController {
         }
     }
 
-    public void shutDown(){
-        if(receptionThread.isAlive()){
-            receptionThread.interrupt();
-        }
-    }
-
     private void setupTextAreas(){
         console.setWrapText(true);
-        mailContent.setWrapText(true);
     }
     public void log(String string){
-        console.appendText(string);
-        console.appendText("\n");
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                console.appendText(string);
+                console.appendText("\n");
+            }
+        });
     }
 
     public String getHostAdress(){
@@ -162,11 +188,9 @@ public class FrameController {
         this.state = state;
     }
 
-    */
-/**
+    /**
      * UTILS
-     *//*
-
+     */
     private void sendToServer(EventPOP3 eventPOP3, String... args) throws IOException {
         String separator = " ";
         StringBuilder stringBuilder = new StringBuilder();
@@ -182,4 +206,3 @@ public class FrameController {
 
 
 }
-*/

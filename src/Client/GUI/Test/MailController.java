@@ -1,6 +1,7 @@
 package Client.GUI.Test;
 
 import Client.ReceptionThread;
+import Helpers.Constants;
 import Helpers.EventPOP3;
 import Helpers.States;
 import javafx.application.Platform;
@@ -36,6 +37,7 @@ public class MailController extends Observable implements Initializable {
     public Thread receptionThread;
     private AnchorPane root;
     private Scene scene;
+    private String timbreADate;
 
     private States state = States.AUTHORIZATION;
 
@@ -73,6 +75,16 @@ public class MailController extends Observable implements Initializable {
             //Platform.runLater(new ReceptionThread(this));
             receptionThread = new Thread(new ReceptionThread(this));
             receptionThread.setDaemon(true);
+            if(socket.isConnected()){
+                BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                String recievedString = in.readLine();
+                if(recievedString != null){
+                    String[] splitedString = recievedString.split(" ");
+                    if (splitedString[0].contains(Constants.ok) && splitedString.length >= 5) {
+                        timbreADate = splitedString[4];
+                    }
+                }
+            }
             receptionThread.start();
 
         } catch (Exception e) {
@@ -87,7 +99,8 @@ public class MailController extends Observable implements Initializable {
         if (socket != null && socket.isConnected() && state.equals(States.AUTHORIZATION)) {
             try {
                 log("Loging in your Mail Box");
-                String passwordMD5 = new String(MessageDigest.getInstance("MD5").digest(getPassword().getBytes()), StandardCharsets.UTF_8);
+                String sommeDeControle = new StringBuilder().append(getPassword()).append(timbreADate).toString();
+                String passwordMD5 = new String(MessageDigest.getInstance("MD5").digest(sommeDeControle.getBytes()), StandardCharsets.UTF_8);
                 sendToServer(EventPOP3.APOP, getUserName(), passwordMD5);
                 state = States.TRANSACTION;
                 // Chargement de la fenêtre des mails si succès de l'authentification

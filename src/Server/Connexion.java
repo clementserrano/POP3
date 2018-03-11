@@ -10,6 +10,9 @@ import java.net.SocketException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,6 +48,14 @@ public class Connexion implements Runnable {
             String user = "";
             Map<Integer, Mail> boiteMail = new HashMap<>();
 
+            SimpleDateFormat sdf = new SimpleDateFormat("hhmmss");
+            String timbreADate = "<1234."+sdf.format(new Date())+"@server.com>";
+
+            if(socket.isConnected()){
+                // Envoi du timbre à date
+                writeAndPrint(out, "+OK POP3 server ready " + timbreADate);
+            }
+
             while (socket.isConnected()) {
                 if ((message = in.readLine()) != null) {
                     print(message);
@@ -65,8 +76,10 @@ public class Connexion implements Runnable {
                                     if (users.keySet().contains(param)) {
                                         // Vérifie si pass OK
                                         String pass = new String(array[2].getBytes(), StandardCharsets.UTF_8);
-                                        String passInDB = new String(MessageDigest.getInstance("MD5").digest(users.get(param).getBytes()), StandardCharsets.UTF_8);
-                                        if (passInDB.equals(pass)) {
+                                        String sommeDeControle = new StringBuilder().append(users.get(param)).append(timbreADate).toString();
+                                        String passwordMD5 = new String(MessageDigest.getInstance("MD5").digest(
+                                                sommeDeControle.getBytes()), StandardCharsets.UTF_8);
+                                        if (passwordMD5.equals(pass)) {
                                             user = param;
                                             boiteMail = boitesMail.get(user);
                                             writeAndPrint(out, "+OK " + user + " a " + boiteMail.size() + " messages.");

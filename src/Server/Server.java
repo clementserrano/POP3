@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class Server extends ConsoleApp {
 
-    private static final int port = 25;
+    private static final int port = 110;
     private static ServerSocket serverSocket;
 
     //Tableau des utilisateurs et passwords

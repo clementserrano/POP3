@@ -4,6 +4,7 @@ import Helpers.ConsoleColor;
 import Helpers.EventPOP3;
 import Helpers.States;
 
+import javax.net.ssl.SSLSocket;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 public class Connexion implements Runnable {
 
-    private Socket socket;
+    private SSLSocket socket;
 
     //Tableau des utilisateurs et passwords
     private static Map<String, String> users;
@@ -28,7 +29,7 @@ public class Connexion implements Runnable {
     private static Map<String, Map<Integer, Mail>> boitesMail;
 
 
-    public Connexion(Socket socket, Map<String, String> users, Map<String, Map<Integer, Mail>> boitesMail) {
+    public Connexion(SSLSocket socket, Map<String, String> users, Map<String, Map<Integer, Mail>> boitesMail) {
         this.socket = socket;
         this.users = users;
         this.boitesMail = boitesMail;

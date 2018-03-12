@@ -6,6 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Type;
@@ -16,8 +19,9 @@ import java.util.Map;
 
 public class Server extends ConsoleApp {
 
-    private static final int port = 110;
-    private static ServerSocket serverSocket;
+    private static final int port = 995;
+    private static SSLServerSocket serverSocket;
+    private static SSLServerSocketFactory factory;
 
     //Tableau des utilisateurs et passwords
     private static Map<String, String> users;
@@ -35,13 +39,15 @@ public class Server extends ConsoleApp {
         try {
             ConsoleApp.setConsoleColor(ConsoleColor.ANSI_RED);
             ConsoleApp.log("Starting Server.Server", ConsoleColor.ANSI_RED);
-            serverSocket = new ServerSocket(port, 10);
+            factory = (SSLServerSocketFactory) SSLServerSocketFactory.getDefault();
+            serverSocket = (SSLServerSocket) factory.createServerSocket(port);
+            serverSocket.setEnabledCipherSuites(factory.getSupportedCipherSuites());
             ConsoleApp.log("InetAddress : " + serverSocket.getInetAddress(), ConsoleColor.ANSI_RED);
             ConsoleApp.log("Port :" + serverSocket.getLocalPort(), ConsoleColor.ANSI_RED);
             ConsoleApp.log("Waiting for client ... ");
 
             while (true){
-                Socket inputClientSocket = serverSocket.accept();
+                SSLSocket inputClientSocket = (SSLSocket) serverSocket.accept();
                 ConsoleApp.log("Client "+ inputClientSocket.getInetAddress() + " connected.", ConsoleColor.ANSI_GREEN);
 
                 new Thread(new Connexion(inputClientSocket, users, boitesMail)).start();

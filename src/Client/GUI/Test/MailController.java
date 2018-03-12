@@ -17,6 +17,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -30,7 +32,8 @@ import java.util.logging.Logger;
 
 public class MailController extends Observable implements Initializable {
 
-    private static Socket socket;
+    private static SSLSocket socket;
+    private static SSLSocketFactory factory;
     private static InputStream inputStream;
     private static OutputStream outputStream;
     public int messageNumber;
@@ -67,7 +70,7 @@ public class MailController extends Observable implements Initializable {
         }
         try {
             log("Connecting");
-            socket = new Socket(InetAddress.getByName(getHostAdress()), Integer.parseInt(getPort()));
+            socket = (SSLSocket) factory.createSocket(InetAddress.getByName(getHostAdress()), Integer.parseInt(getPort()));
             log("Connected");
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();

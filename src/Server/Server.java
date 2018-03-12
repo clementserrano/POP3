@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class Server extends ConsoleApp {
 
-    private static final int port = 995;
+    private static final int port = 1025;
     private static SSLServerSocket serverSocket;
     private static SSLServerSocketFactory factory;
 

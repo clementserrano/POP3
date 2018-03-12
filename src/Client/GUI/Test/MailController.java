@@ -70,7 +70,9 @@ public class MailController extends Observable implements Initializable {
         }
         try {
             log("Connecting");
+            factory = (SSLSocketFactory) SSLSocketFactory.getDefault();
             socket = (SSLSocket) factory.createSocket(InetAddress.getByName(getHostAdress()), Integer.parseInt(getPort()));
+            socket.setEnabledCipherSuites(factory.getSupportedCipherSuites());
             log("Connected");
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();

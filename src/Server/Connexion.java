@@ -6,12 +6,9 @@ import Helpers.States;
 
 import javax.net.ssl.SSLSocket;
 import java.io.*;
-import java.net.Socket;
 import java.net.SocketException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,9 +47,9 @@ public class Connexion implements Runnable {
             Map<Integer, Mail> boiteMail = new HashMap<>();
 
             SimpleDateFormat sdf = new SimpleDateFormat("hhmmss");
-            String timbreADate = "<1234."+sdf.format(new Date())+"@server.com>";
+            String timbreADate = "<1234." + sdf.format(new Date()) + "@server.com>";
 
-            if(socket.isConnected()){
+            if (socket.isConnected()) {
                 // Envoi du timbre à date
                 writeAndPrint(out, "+OK POP3 server ready " + timbreADate);
             }
@@ -65,7 +62,7 @@ public class Connexion implements Runnable {
                     String evt = array[0];
                     String param = null;
 
-                    if(array.length > 1){
+                    if (array.length > 1) {
                         param = array[1];
                     }
 
@@ -85,10 +82,10 @@ public class Connexion implements Runnable {
                                             boiteMail = boitesMail.get(user);
                                             writeAndPrint(out, "+OK " + user + " a " + boiteMail.size() + " messages.");
                                             etat = States.TRANSACTION;
-                                        }else{
+                                        } else {
                                             writeAndPrint(out, "-ERR Mot de passe incorrect");
                                         }
-                                    }else{
+                                    } else {
                                         writeAndPrint(out, "-ERR Utilisateur inconnu");
                                     }
                                     break;
@@ -111,15 +108,14 @@ public class Connexion implements Runnable {
                         case RETR:
                             switch (etat) {
                                 case AUTHORIZATION:
-                                    writeAndPrint(out,"Commande " + message + " ignorée");
+                                    writeAndPrint(out, "Commande " + message + " ignorée");
                                     break;
                                 case TRANSACTION:
                                     // Vérifie si le numéro correspond
                                     Integer nMail;
                                     if (param != null) {
                                         nMail = Integer.valueOf(param);
-                                    }
-                                    else {
+                                    } else {
                                         writeAndPrint(out, "-ERR");
                                         break;
                                     }
@@ -154,7 +150,7 @@ public class Connexion implements Runnable {
 
         } catch (SocketException e) {
             System.out.println(socket.getInetAddress() + " : " + e.getMessage());
-        } catch (Exception e2){
+        } catch (Exception e2) {
             System.out.println("An error occurred");
             e2.printStackTrace();
         }

@@ -56,7 +56,7 @@ public class Mail {
         this.content = content;
     }
 
-    public int getNbBytes(){
+    public int getNbBytes() {
         int res = 0;
         res += from.getBytes().length
                 + to.getBytes().length

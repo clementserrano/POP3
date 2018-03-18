@@ -12,8 +12,6 @@ import javax.net.ssl.SSLSocket;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Type;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,13 +44,13 @@ public class Server extends ConsoleApp {
             ConsoleApp.log("Port :" + serverSocket.getLocalPort(), ConsoleColor.ANSI_RED);
             ConsoleApp.log("Waiting for client ... ");
 
-            while (true){
+            while (true) {
                 SSLSocket inputClientSocket = (SSLSocket) serverSocket.accept();
-                ConsoleApp.log("Client "+ inputClientSocket.getInetAddress() + " connected.", ConsoleColor.ANSI_GREEN);
+                ConsoleApp.log("Client " + inputClientSocket.getInetAddress() + " connected.", ConsoleColor.ANSI_GREEN);
 
                 new Thread(new Connexion(inputClientSocket, users, boitesMail)).start();
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -62,11 +60,13 @@ public class Server extends ConsoleApp {
             FileReader file = new FileReader("src/Server/database.json");
             JsonObject json = gson.fromJson(file, JsonObject.class);
             // Users
-            Type usersType = new TypeToken<Map<String, String>>() {}.getType();
+            Type usersType = new TypeToken<Map<String, String>>() {
+            }.getType();
             users = gson.fromJson(json.get("users").getAsJsonObject(), usersType);
 
             // Boites mail
-            Type boitesMailType = new TypeToken<Map<String, Map<Integer, Mail>>>() {}.getType();
+            Type boitesMailType = new TypeToken<Map<String, Map<Integer, Mail>>>() {
+            }.getType();
             boitesMail = gson.fromJson(json.get("boitesMail").getAsJsonObject(), boitesMailType);
         } catch (FileNotFoundException e) {
             e.printStackTrace();

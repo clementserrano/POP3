@@ -236,7 +236,7 @@ public class MailController extends Observable implements Initializable {
             stringBuilder.append(arg);
         }
         log("\n");
-        log("(Debug) sending : " + stringBuilder.toString());
+        log("Sending : " + stringBuilder.toString());
         stringBuilder.append("\r\n");
         outputStream.write(stringBuilder.toString().getBytes());
     }

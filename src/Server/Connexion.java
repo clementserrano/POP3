@@ -85,7 +85,11 @@ public class Connexion implements Runnable {
                                             boiteMail = boitesMail.get(user);
                                             writeAndPrint(out, "+OK " + user + " a " + boiteMail.size() + " messages.");
                                             etat = States.TRANSACTION;
+                                        }else{
+                                            writeAndPrint(out, "-ERR Mot de passe incorrect");
                                         }
+                                    }else{
+                                        writeAndPrint(out, "-ERR Utilisateur inconnu");
                                     }
                                     break;
                                 case TRANSACTION:

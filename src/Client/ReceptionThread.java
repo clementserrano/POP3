@@ -1,18 +1,14 @@
 package Client;
 
-import Client.GUI.Test.FrameController;
-import Client.GUI.Test.MailController;
+import Client.GUI.MailController;
 import Helpers.Constants;
 import Helpers.EventPOP3;
 import Helpers.States;
-import javafx.application.Platform;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.Observable;
-import java.util.Observer;
 
 public class ReceptionThread implements Runnable {
 

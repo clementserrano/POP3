@@ -1,4 +1,4 @@
-package Client.GUI.Test;
+package Client.GUI;
 
 import Client.ReceptionThread;
 import Helpers.Constants;
@@ -156,12 +156,12 @@ public class MailController extends Observable implements Initializable {
             if (event.getSource() == loginBtn) {
 
                 stage = (Stage) loginBtn.getScene().getWindow();
-                root = FXMLLoader.load(getClass().getResource("/Client/GUI/Test/mailScreen.fxml"));
+                root = FXMLLoader.load(getClass().getResource("/Client/GUI/mailScreen.fxml"));
 
 
             } else {
                 stage = (Stage) logoutBtn.getScene().getWindow();
-                root = FXMLLoader.load(getClass().getResource("/Client/GUI/Test/loginScreen.fxml"));
+                root = FXMLLoader.load(getClass().getResource("/Client/GUI/loginScreen.fxml"));
             }
             scene = new Scene(root);
             stage.setScene(scene);
